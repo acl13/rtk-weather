@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { fetchWeather } from "./store/slices/weatherData";
+import { fetchWeather, addCity } from "./store/slices/weatherData";
 import { useDispatch, useSelector } from "react-redux";
 import SearchBar from "./components/SearchBar";
 import WeatherDataChart from "./components/WeatherDataChart";
@@ -9,21 +9,23 @@ export default function Home() {
   const [city, setCity] = useState("");
   const dispatch = useDispatch();
   const data = useSelector((state) => state.weather.data);
+  const cities = useSelector((state) => state.weather.cities);
 
   const onChange = (e) => {
     setCity(e.target.value);
   };
 
-  const onSearch = () => {
-    dispatch(fetchWeather(city));
+  const onSearch = async () => {
+    const cityData = await dispatch(fetchWeather(city));
+    dispatch(addCity({ data: cityData.payload }));
     setCity("");
   };
 
-  console.log(data);
+  console.log(cities);
 
   // Forecast data is stored in three hour intervals. This fetches the data every 4 intervals, or 12 hours
-  const sixHourIntervals = [0, 3, 7, 11, 15, 19, 23, 27, 31, 35, 39];
-  const fiveDayForecast = sixHourIntervals.map(
+  const twelveHourIntervals = [0, 3, 7, 11, 15, 19, 23, 27, 31, 35, 39];
+  const fiveDayForecast = twelveHourIntervals.map(
     (interval) => data?.list[interval].main
   );
 

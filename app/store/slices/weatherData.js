@@ -14,6 +14,12 @@ export const weatherSlice = createSlice({
     isLoading: false,
     data: null,
     error: false,
+    cities: [],
+  },
+  reducers: {
+    addCity(state, action) {
+      state.cities.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchWeather.pending, (state) => {
@@ -28,5 +34,7 @@ export const weatherSlice = createSlice({
     });
   },
 });
+
+export const { addCity } = weatherSlice.actions;
 
 export default weatherSlice.reducer;
