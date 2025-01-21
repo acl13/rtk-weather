@@ -64,8 +64,8 @@ export default function Home() {
   });
 
   return (
-    <main>
-      <div className="d-flex justify-content-center">
+    <main className="container">
+      <div className="">
         <SearchBar
           onChange={onChange}
           city={city}
