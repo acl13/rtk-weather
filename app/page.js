@@ -17,38 +17,51 @@ export default function Home() {
 
   const onSearch = async () => {
     const cityData = await dispatch(fetchWeather(city));
+    // adds searched cities to array so that the data for multiple cities can be displayed at once
     dispatch(addCity({ data: cityData.payload }));
     setCity("");
   };
 
-  console.log(cities);
-
-  // Forecast data is stored in three hour intervals. This fetches the data every 4 intervals, or 12 hours
-  const twelveHourIntervals = [0, 3, 7, 11, 15, 19, 23, 27, 31, 35, 39];
-  const fiveDayForecast = twelveHourIntervals.map(
-    (interval) => data?.list[interval].main
-  );
-
+  // Temperature data comes in Kelvin and needs to be converted to Fahrenheit
   const convertKelvinToFahrenheit = (deg) => {
     return Math.round((deg - 273) * 1.8 + 32);
   };
-  const temperatureData = fiveDayForecast?.map((day) =>
-    convertKelvinToFahrenheit(day?.temp)
-  );
-  const humidityData = fiveDayForecast?.map((day) => day?.humidity);
-  const pressureData = fiveDayForecast?.map((day) => day?.pressure);
-  const temperatureAverage =
-    Math.round(
-      temperatureData.reduce((a, b) => a + b) / temperatureData.length
-    ).toString() + "\u00b0F";
-  const humidityAverage =
-    Math.round(
-      humidityData.reduce((a, b) => a + b) / humidityData.length
-    ).toString() + "%";
-  const pressureAverage =
-    Math.round(
-      pressureData.reduce((a, b) => a + b) / pressureData.length
-    ).toString() + "hPa";
+
+  const cityWeatherData = cities.map((city) => {
+    // Forecast data is stored in three hour intervals. This fetches the data every 4 intervals, or 12 hours
+    const twelveHourIntervals = [0, 3, 7, 11, 15, 19, 23, 27, 31, 35, 39];
+    const fiveDayForecast = twelveHourIntervals.map(
+      (interval) => city?.data?.list[interval].main
+    );
+    const cityName = city.data?.city?.name;
+    const temperatureData = fiveDayForecast?.map((day) =>
+      convertKelvinToFahrenheit(day?.temp)
+    );
+    const humidityData = fiveDayForecast?.map((day) => day?.humidity);
+    const pressureData = fiveDayForecast?.map((day) => day?.pressure);
+    const temperatureAverage =
+      Math.round(
+        temperatureData.reduce((a, b) => a + b) / temperatureData.length
+      ).toString() + "\u00b0F";
+    const humidityAverage =
+      Math.round(
+        humidityData.reduce((a, b) => a + b) / humidityData.length
+      ).toString() + "%";
+    const pressureAverage =
+      Math.round(
+        pressureData.reduce((a, b) => a + b) / pressureData.length
+      ).toString() + "hPa";
+
+    return {
+      cityName,
+      temperatureData,
+      humidityData,
+      pressureData,
+      temperatureAverage,
+      humidityAverage,
+      pressureAverage,
+    };
+  });
 
   return (
     <main>
@@ -59,30 +72,31 @@ export default function Home() {
           onSearch={onSearch}
         ></SearchBar>
       </div>
-      {data && (
-        <div className="container border">
-          <div className="row">
-            <div className="col-sm d-flex align-items-center">
-              <h2>{data?.city?.name}</h2>
+      {data &&
+        cityWeatherData.map((city) => (
+          <div className="container border" key={city.cityName}>
+            <div className="row">
+              <div className="col-sm d-flex align-items-center">
+                <h2>{city.cityName}</h2>
+              </div>
+              <WeatherDataChart
+                data={city.temperatureData}
+                color={"orange"}
+                text={city.temperatureAverage}
+              />
+              <WeatherDataChart
+                data={city.pressureData}
+                color={"green"}
+                text={city.pressureAverage}
+              />
+              <WeatherDataChart
+                data={city.humidityData}
+                color={"black"}
+                text={city.humidityAverage}
+              />
             </div>
-            <WeatherDataChart
-              data={temperatureData}
-              color={"orange"}
-              text={temperatureAverage}
-            />
-            <WeatherDataChart
-              data={pressureData}
-              color={"green"}
-              text={pressureAverage}
-            />
-            <WeatherDataChart
-              data={humidityData}
-              color={"black"}
-              text={humidityAverage}
-            />
           </div>
-        </div>
-      )}
+        ))}
     </main>
   );
 }
