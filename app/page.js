@@ -4,6 +4,7 @@ import { fetchWeather, addCity } from "./store/slices/weatherData";
 import { useDispatch, useSelector } from "react-redux";
 import SearchBar from "./components/SearchBar";
 import WeatherDataChart from "./components/WeatherDataChart";
+import HeadingsRow from "./components/HeadingsRow";
 
 export default function Home() {
   const [city, setCity] = useState("");
@@ -65,18 +66,17 @@ export default function Home() {
 
   return (
     <main className="container">
-      <div className="">
-        <SearchBar
-          onChange={onChange}
-          city={city}
-          onSearch={onSearch}
-        ></SearchBar>
-      </div>
+      <SearchBar
+        onChange={onChange}
+        city={city}
+        onSearch={onSearch}
+      ></SearchBar>
+      <HeadingsRow />
       {data &&
         cityWeatherData.map((city) => (
-          <div className="container border" key={city.cityName}>
-            <div className="row">
-              <div className="col-sm d-flex align-items-center">
+          <div className="container border-top" key={city.cityName}>
+            <div className="row border-top p-1">
+              <div className="col-sm d-flex align-items-center justify-content-center">
                 <h2>{city.cityName}</h2>
               </div>
               <WeatherDataChart
