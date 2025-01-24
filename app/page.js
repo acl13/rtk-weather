@@ -44,6 +44,7 @@ export default function Home() {
     return Math.round((deg - 273) * 1.8 + 32);
   };
 
+  // Stores relevant weather information (including temperature conversions and averages) from the API search in the returned variables.
   const cityWeatherData = cities.map((city) => {
     // Forecast data is stored in three hour intervals. This fetches the data every 4 intervals, or 12 hours
     const twelveHourIntervals = [0, 3, 7, 11, 15, 19, 23, 27, 31, 35, 39];
