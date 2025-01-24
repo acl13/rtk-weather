@@ -31,6 +31,7 @@ export const weatherSlice = createSlice({
     });
     builder.addCase(fetchWeather.rejected, (state) => {
       state.error = true;
+      state.isLoading = false;
     });
   },
 });

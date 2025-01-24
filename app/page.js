@@ -17,7 +17,23 @@ export default function Home() {
   };
 
   const onSearch = async () => {
+    //Prevents user from submitting an empty search
+    if (city.trim() === "") {
+      alert("Please enter a valid city");
+      return;
+    }
+
     const cityData = await dispatch(fetchWeather(city));
+
+    if (cityData.error) {
+      alert(
+        "Oops, something went wrong. Please check that you have entered a valid city and try again."
+      );
+      console.log(cityData.error);
+      setCity("");
+      return;
+    }
+
     // adds searched cities to array so that the data for multiple cities can be displayed at once
     dispatch(addCity({ data: cityData.payload }));
     setCity("");
