@@ -29,7 +29,6 @@ export default function Home() {
       alert(
         "Oops, something went wrong. Please check that you have entered a valid city and try again."
       );
-      console.log(cityData.error);
       setCity("");
       return;
     }
