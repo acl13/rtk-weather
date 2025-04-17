@@ -59,7 +59,7 @@ This project is a simple weather dashboard that allows users to search for a cit
 
 4. Create a `.env` file in the project root:
    ```bash
-   REACT_APP_WEATHER_API_KEY=your_openweathermap_api_key
+   NEXT_PUBLIC_API_KEY=your_openweathermap_api_key
    ```
 
 ### Running the Application
